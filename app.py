@@ -54,6 +54,7 @@ if mostrar_campo:
                   linewidth=1.2, cmap='plasma', density=1.5, arrowstyle='->', zorder=1)
 
 # Función para calcular y dibujar la fuerza de un átomo sobre otro
+# Función para calcular y dibujar la fuerza de un átomo sobre otro
 def dibujar_fuerza_par(p_origen, q_origen, p_destino, q_destino, nombre, color):
     r_vec = p_destino - p_origen
     r_mag = np.linalg.norm(r_vec)
