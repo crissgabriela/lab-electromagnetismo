@@ -64,43 +64,22 @@ def dibujar_fuerza_par(p_origen, q_origen, p_destino, q_destino, nombre, color):
     F_mag = (q_origen * q_destino) / (r_mag**2)
     F_vec = F_mag * (r_vec / r_mag)
     
-    # Escalamiento visual: limitamos el tamaño máximo a 2.5 unidades de la grilla
+    # Aumentamos la escala visual significativamente (x15)
     largo_real = np.linalg.norm(F_vec)
-    largo_visual = min(largo_real * 1.5, 2.5) 
+    largo_visual = min(largo_real * 15.0, 3.5) 
     
     if largo_real > 0:
-        vec_dibujo = (F_vec / largo_real) * largo_visual
+        dir_vec = F_vec / largo_real
         
-        # Dibujar flecha con annotate
-        ax.annotate('', xy=p_destino + vec_dibujo, xytext=p_destino,
+        # Desplazamos el inicio de la flecha al borde del átomo (offset de 0.45)
+        offset = 0.45
+        inicio = p_destino + dir_vec * offset
+        fin = inicio + dir_vec * largo_visual
+        
+        # Dibujar flecha
+        ax.annotate('', xy=fin, xytext=inicio,
                     arrowprops=dict(facecolor=color, edgecolor=color, arrowstyle='-|>', lw=2.5, mutation_scale=20),
                     zorder=4)
-        # Etiqueta de la fuerza (Ej: F1->2)
-        ax.text(p_destino[0] + vec_dibujo[0]*1.1, p_destino[1] + vec_dibujo[1]*1.1, 
+        # Etiqueta de la fuerza posicionada en la punta de la flecha
+        ax.text(fin[0] + dir_vec[0]*0.2, fin[1] + dir_vec[1]*0.2, 
                 nombre, color=color, fontsize=11, fontweight='bold', zorder=7)
-
-# 2. Dibujar Fuerzas
-if mostrar_fuerzas:
-    # Fuerzas SOBRE el Átomo 1 (Verdes)
-    dibujar_fuerza_par(p2, q2, p1, q1, "F21", '#00b159')
-    dibujar_fuerza_par(p3, q3, p1, q1, "F31", '#00b159')
-    
-    # Fuerzas SOBRE el Átomo 2 (Naranjas)
-    dibujar_fuerza_par(p1, q1, p2, q2, "F12", '#ffc425')
-    dibujar_fuerza_par(p3, q3, p2, q2, "F32", '#ffc425')
-    
-    # Fuerzas SOBRE el Átomo 3 (Moradas)
-    dibujar_fuerza_par(p1, q1, p3, q3, "F13", '#d11141')
-    dibujar_fuerza_par(p2, q2, p3, q3, "F23", '#d11141')
-
-# 3. Dibujar los Átomos encima de todo
-colores = ['red' if q > 0 else 'blue' if q < 0 else 'gray' for q in [q1, q2, q3]]
-for p, q, c, label in zip([p1, p2, p3], [q1, q2, q3], colores, ['1', '2', '3']):
-    ax.scatter(p[0], p[1], s=900, color=c, zorder=5, edgecolors='black')
-    signo = "+" if q > 0 else ""
-    texto = f"{signo}{q}μC" if q != 0 else "0μC"
-    ax.text(p[0], p[1], texto, ha='center', va='center', color='white', fontweight='bold', zorder=6, fontsize=10)
-    ax.text(p[0]+0.4, p[1]+0.4, f"A{label}", fontsize=12, fontweight='bold', zorder=6)
-
-plt.title("Interacción y Campo Eléctrico Resultante", fontsize=14)
-st.pyplot(fig)
