@@ -41,6 +41,8 @@ mostrar_campo = st.sidebar.checkbox("Mostrar líneas de Campo Eléctrico", value
 mostrar_fuerzas = st.sidebar.checkbox("Mostrar vectores de Fuerza entre pares", value=True)
 
 fig, ax = plt.subplots(figsize=(8, 8))
+fig.patch.set_alpha(0.0) # Hace transparente el fondo de la figura externa
+ax.set_facecolor('none') # Hace transparente el fondo del plano cartesiano
 ax.set_xlim(-6, 6)
 ax.set_ylim(-6, 6)
 ax.set_aspect('equal')
@@ -86,14 +88,17 @@ def dibujar_fuerza_par(p_origen, q_origen, p_destino, q_destino, nombre, color):
 
 # 2. Dibujar Fuerzas
 if mostrar_fuerzas:
-    dibujar_fuerza_par(p2, q2, p1, q1, "F21", '#00b159') # Verde
-    dibujar_fuerza_par(p3, q3, p1, q1, "F31", '#00b159')
+    # Usando el Cian de Makerbox para un par de fuerzas
+    dibujar_fuerza_par(p2, q2, p1, q1, "F21", '#00aeef') 
+    dibujar_fuerza_par(p3, q3, p1, q1, "F31", '#00aeef')
     
-    dibujar_fuerza_par(p1, q1, p2, q2, "F12", '#ffc425') # Amarillo
-    dibujar_fuerza_par(p3, q3, p2, q2, "F32", '#ffc425')
+    # Usando el Morado de Makerbox para otro par
+    dibujar_fuerza_par(p1, q1, p2, q2, "F12", '#46247a') 
+    dibujar_fuerza_par(p3, q3, p2, q2, "F32", '#46247a')
     
-    dibujar_fuerza_par(p1, q1, p3, q3, "F13", '#d11141') # Rojo
-    dibujar_fuerza_par(p2, q2, p3, q3, "F23", '#d11141')
+    # Un naranja brillante para contraste en el tercer par
+    dibujar_fuerza_par(p1, q1, p3, q3, "F13", '#f37021') 
+    dibujar_fuerza_par(p2, q2, p3, q3, "F23", '#f37021')
 
 # 3. Dibujar los Átomos
 colores = ['red' if q > 0 else 'blue' if q < 0 else 'gray' for q in [q1, q2, q3]]
@@ -106,3 +111,4 @@ for p, q, c, label in zip([p1, p2, p3], [q1, q2, q3], colores, ['1', '2', '3']):
 
 plt.title("Interacción y Campo Eléctrico Resultante", fontsize=14)
 st.pyplot(fig)
+
